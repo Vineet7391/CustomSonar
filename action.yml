@@ -47,7 +47,7 @@ runs:
         fi
 
     - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@v1
+      uses: SonarSource/sonarcloud-github-action@master
       with:
         args: ${{ inputs.args }}
       env:
@@ -55,7 +55,7 @@ runs:
         SONAR_HOST_URL: ${{ inputs.sonarHostUrl }}
 
     - name: SonarQube Quality Gate check
-      uses: sonarsource/sonarqube-quality-gate-action@v1
+      uses: sonarsource/sonarqube-quality-gate-action@master
       id: sonarqube-quality-gate-check
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Referencing the token from GitHub Secrets
