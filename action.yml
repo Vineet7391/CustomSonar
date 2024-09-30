@@ -1,4 +1,4 @@
-name: QuanlityInnovations SonarCloud GitHub Action
+name: QuanlityInnovations SonarQube GitHub Action
 description: 'Scans, Quality Gates, PR Comments, and Annotations'
 
 branding:
@@ -7,11 +7,11 @@ branding:
 
 inputs:
   scoverageReport:
-    description: The path to the Scoverage report in XML format
+    description: 'The path to the Scoverage report in XML format'
     required: false
 
   args:
-    description: Additional arguments to the SonarCloud scanner
+    description: 'Additional arguments to the SonarQube scanner'
     required: false
 
   teamName:
@@ -30,27 +30,27 @@ inputs:
     default: 'https://sonarcloud.io/'
 
   SONAR_TOKEN:
-    description: 'SonarCloud or SonarQube authentication token'
+    description: 'SonarQube authentication token'
     required: true
 
 runs:
   using: composite
   steps:
-    - name: Replace all working directory paths with sources path
+    - name: Fix directory paths with sources path
       run: |
         if [[ -n "${{ inputs.scoverageReport }}" ]]; then
           sed -i -e "s,`pwd`,/github/workspace,g" ${{ inputs.scoverageReport }};
         fi
       shell: bash
 
-    - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@master  # Use a stable version instead of master
+    - name: SonarQube Scan
+      uses: SonarSource/sonarcloud-github-action@master
       with:
         args: ${{ inputs.args }}
         projectBaseDir: ${{ inputs.projectBaseDir }}     
 
     - name: SonarQube Quality Gate check
-      uses: sonarsource/sonarqube-quality-gate-action@master  # Use a stable version instead of master
+      uses: sonarsource/sonarqube-quality-gate-action@master
       id: sonarqube-quality-gate-check     
 
     - name: SonarQube Quality Gate Comment
