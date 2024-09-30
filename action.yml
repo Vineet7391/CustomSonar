@@ -5,7 +5,10 @@ branding:
   icon: check-circle
   color: green
 
-inputs: 
+inputs:
+  scoverageReport:
+    description: The path to the Scoverage report in XML format
+    required: false
 
   args:
     description: Additional arguments to the SonarCloud scanner
@@ -40,8 +43,13 @@ runs:
   steps:
 
     - name: Replace all working directory paths with sources path
-      run: sed -i -e "s#${{ github.workspace }}#/github/workspace#g" $(grep -rl "${{ github.workspace }}" .)
-      
+      shell: bash
+      run: |
+        echo "Executing Fixpath!"
+        if [ -n "${{ inputs.scoverageReport }}" ] && [ "${{ inputs.fixPath }}" = "true" ]; then
+          sed -i -e s,`pwd`,/github/workspace,g ${{ inputs.scoverageReport }}
+        fi
+
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
       with:
