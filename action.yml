@@ -48,11 +48,6 @@ runs:
         echo "Executing Fixpath!"
         if [ -n "${{ inputs.scoverageReport }}" ] && [ "${{ inputs.fixPath }}" = "true" ]; then
           sed -i -e s,`pwd`,/github/workspace,g ${{ inputs.scoverageReport }}
-        fi
-        echo "Executing Fixpath!"
-        if [ -n "${{ inputs.scoverageReport }}" ] && [ "${{ inputs.fixPath }}" = "true" ]; then
-          sed -i -e "s#$(pwd)#/github/workspace#g" "${{ inputs.scoverageReport }}"
-        fi
         # Constructing the final path
         final_path="/github/workspace/${{ inputs.scoverageReport }}"
         echo "Final path for Scoverage report: $final_path"
@@ -60,7 +55,7 @@ runs:
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
       with:
-        sonar.scala.coverage.reportPaths: ${{ inputs.scoverageReport }}
+         args: ${{ inputs.args }}
       env:
         SONAR_HOST_URL: ${{ inputs.sonarHostUrl }}
 
