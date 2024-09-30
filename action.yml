@@ -33,28 +33,28 @@ inputs:
     description: 'SonarCloud or SonarQube authentication token'
     required: true
 
-
 runs:
   using: composite
   steps:
-     - name: Replace all working directory paths with sources path
-       run: if [[ -n "${{ inputs.scoverageReport }}" ]]; then sed -i -e s,`pwd`,/github/workspace,g ${{ inputs.scoverageReport }}; fi
-       shell: bash
+    - name: Replace all working directory paths with sources path
+      run: |
+        if [[ -n "${{ inputs.scoverageReport }}" ]]; then
+          sed -i -e "s,`pwd`,/github/workspace,g" ${{ inputs.scoverageReport }};
+        fi
+      shell: bash
 
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master  # Use a stable version instead of master
       with:
-         args: ${{ inputs.args }}
-         projectBaseDir: ${{ inputs.projectBaseDir }}
+        args: ${{ inputs.args }}
+        projectBaseDir: ${{ inputs.projectBaseDir }}
       env:
-        # SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ inputs.sonarHostUrl }}
 
     - name: SonarQube Quality Gate check
       uses: sonarsource/sonarqube-quality-gate-action@master  # Use a stable version instead of master
       id: sonarqube-quality-gate-check
       env:
-        # SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ inputs.sonarHostUrl }}
 
     - name: SonarQube Quality Gate Comment
