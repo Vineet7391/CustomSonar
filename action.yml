@@ -41,16 +41,14 @@ inputs:
 runs:
   using: composite
   steps:
-
+  
     - name: Replace all working directory paths with sources path
       shell: bash
-      run: |
+      run: >
         echo "Executing Fixpath!"
-        if [ -n "${{ inputs.scoverageReport }}" ] && [ "${{ inputs.fixPath }}" = "true" ]; then
-          sed -i -e s,`pwd`,/github/workspace,g ${{ inputs.scoverageReport }}
-        # Constructing the final path
-        final_path="/github/workspace/${{ inputs.scoverageReport }}"
-        echo "Final path for Scoverage report: $final_path"
+        if [ -n "${{ inputs.scoverageReport }} ] && [ "${{inputs.fixPath}}" = "true" ]
+          then sed -i -e s,`pwd`,/github/workspace,g ${{ inputs.scoverageReport }}
+        fi
 
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
