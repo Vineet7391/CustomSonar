@@ -50,7 +50,7 @@ runs:
         fi
 
     - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@v1.0.0  # Use a stable version instead of master
+      uses: SonarSource/sonarcloud-github-action@master  # Use a stable version instead of master
       with:
          args: ${{ inputs.args }}
       env:
@@ -58,7 +58,7 @@ runs:
         SONAR_HOST_URL: ${{ inputs.sonarHostUrl }}
 
     - name: SonarQube Quality Gate check
-      uses: sonarsource/sonarqube-quality-gate-action@v1.0.0  # Use a stable version instead of master
+      uses: sonarsource/sonarqube-quality-gate-action@master  # Use a stable version instead of master
       id: sonarqube-quality-gate-check
       env:
         SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
