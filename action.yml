@@ -1,9 +1,71 @@
-name: 'My JavaScript Action'
-description: 'A simple GitHub Action written in JavaScript'
+name: QuanlityInnovations SonarCloud GitHub Action
+description: 'Scans, Quality Gates, PR Comments, and Annotations'
+
+branding:
+  icon: check-circle
+  color: green
+
 inputs:
-  my-input:
-    description: 'An input for the action'
+  scoverageReport:
+    description: The path to the Scoverage report in XML format
+    required: false
+
+  args:
+    description: Additional arguments to the SonarCloud scanner
+    required: false
+
+  teamName:
+    description: 'The SonarQube team name'
     required: true
+    default: 'team'
+
+  projectBaseDir:
+    description: 'The project base directory'
+    required: false
+    default: '.'
+
+  sonarHostUrl:
+    description: 'The SonarQube Host Url'
+    required: false
+    default: 'https://sonarcloud.io/'
+
+  fixPath:
+    description: 'Fix the path in the Scoverage report'
+    required: false
+    default: 'false'
+
 runs:
-  using: 'node12'
-  main: 'index.js'
+  using: composite
+  steps:
+
+    - name: Replace all working directory paths with sources path
+      shell: bash
+      run: |
+        echo "Executing Fixpath!"
+        if [ -n "${{ inputs.scoverageReport }}" ] && [ "${{ inputs.fixPath }}" = "true" ]; then
+          sed -i -e s,`pwd`,/github/workspace,g ${{ inputs.scoverageReport }}
+        fi
+
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@v1
+      with:
+        args: ${{ inputs.args }}
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Referencing the token from GitHub Secrets
+        SONAR_HOST_URL: ${{ inputs.sonarHostUrl }}
+
+    - name: SonarQube Quality Gate check
+      uses: sonarsource/sonarqube-quality-gate-action@v1
+      id: sonarqube-quality-gate-check
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Referencing the token from GitHub Secrets
+        SONAR_HOST_URL: ${{ inputs.sonarHostUrl }}
+
+    - name: SonarQube Quality Gate Comment
+      id: sonarqube-quality-gate-comment
+      shell: bash
+      run: echo "Future Feature!"
+
+    - name: "Example show SonarQube Quality Gate Status value"
+      shell: bash
+      run: echo "The Quality Gate status is ${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}"
