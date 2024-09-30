@@ -22,7 +22,7 @@ inputs:
   projectBaseDir:
     description: 'The project base directory'
     required: false
-    default: '.'
+    default: .
 
   sonarHostUrl:
     description: 'The SonarQube Host Url'
@@ -33,26 +33,19 @@ inputs:
     description: 'SonarCloud or SonarQube authentication token'
     required: true
 
-  fixPath:
-    description: 'Fix the path in the Scoverage report'
-    required: false
-    default: 'false'
 
 runs:
   using: composite
   steps:
-    # - name: Replace all working directory paths with sources path
-    #   shell: bash
-    #   run: |
-    #     echo "Executing Fixpath!"
-    #     if [ -n "${{ inputs.scoverageReport }}" ] && [ "${{ inputs.fixPath }}" = "true" ]; then
-    #       sed -i -e "s#${{ github.workspace }}#/github/workspace#g" "${{ inputs.scoverageReport }}"
-    #     fi
+     - name: Replace all working directory paths with sources path
+       run: if [[ -n "${{ inputs.scoverageReport }}" ]]; then sed -i -e s,`pwd`,/github/workspace,g ${{ inputs.scoverageReport }}; fi
+       shell: bash
 
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master  # Use a stable version instead of master
       with:
          args: ${{ inputs.args }}
+         projectBaseDir: ${{ inputs.projectBaseDir }}
       env:
         # SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ inputs.sonarHostUrl }}
