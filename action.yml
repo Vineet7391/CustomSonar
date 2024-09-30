@@ -54,14 +54,14 @@ runs:
       with:
          args: ${{ inputs.args }}
       env:
-        SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
+        # SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ inputs.sonarHostUrl }}
 
     - name: SonarQube Quality Gate check
       uses: sonarsource/sonarqube-quality-gate-action@master  # Use a stable version instead of master
       id: sonarqube-quality-gate-check
       env:
-        SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
+        # SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ inputs.sonarHostUrl }}
 
     - name: SonarQube Quality Gate Comment
