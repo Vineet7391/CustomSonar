@@ -41,7 +41,10 @@ inputs:
 runs:
   using: composite
   steps:
-    
+    - name: Set environment variable for workspace
+      run: echo "WORKSPACE_PATH=${{ github.workspace }}" >> $GITHUB_ENV
+    - name: Replace all working directory paths with sources path
+      run: sed -i -e "s#${{ github.workspace }}#/github/workspace#g" $(grep -rl "${{ github.workspace }}" .)      
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
       with:
