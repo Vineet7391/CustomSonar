@@ -60,7 +60,7 @@ runs:
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
       with:
-        args: ${{ inputs.args }}
+        sonar.scala.coverage.reportPaths: ${{ inputs.scoverageReport }}
       env:
         SONAR_HOST_URL: ${{ inputs.sonarHostUrl }}
 
