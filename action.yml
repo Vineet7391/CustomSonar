@@ -41,21 +41,27 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Set environment variable for workspace
-      run: echo "WORKSPACE_PATH=${{ github.workspace }}" >> $GITHUB_ENV
     - name: Replace all working directory paths with sources path
-      run: sed -i -e "s#${{ github.workspace }}#/github/workspace#g" $(grep -rl "${{ github.workspace }}" .)      
+      shell: bash
+      run: |
+        echo "Executing Fixpath!"
+        if [ -n "${{ inputs.scoverageReport }}" ] && [ "${{ inputs.fixPath }}" = "true" ]; then
+          sed -i -e "s#${{ github.workspace }}#/github/workspace#g" "${{ inputs.scoverageReport }}"
+        fi
+
     - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@master
+      uses: SonarSource/sonarcloud-github-action@v1.0.0  # Use a stable version instead of master
       with:
          args: ${{ inputs.args }}
       env:
+        SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ inputs.sonarHostUrl }}
 
     - name: SonarQube Quality Gate check
-      uses: sonarsource/sonarqube-quality-gate-action@master
+      uses: sonarsource/sonarqube-quality-gate-action@v1.0.0  # Use a stable version instead of master
       id: sonarqube-quality-gate-check
       env:
+        SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ inputs.sonarHostUrl }}
 
     - name: SonarQube Quality Gate Comment
@@ -63,6 +69,11 @@ runs:
       shell: bash
       run: echo "Future Feature!"
 
-    - name: "Example show SonarQube Quality Gate Status value"
+    - name: "Show SonarQube Quality Gate Status"
       shell: bash
-      run: echo "The Quality Gate status is ${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}"
+      run: |
+        if [ -n "${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}" ]; then
+          echo "The Quality Gate status is ${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}"
+        else
+          echo "Quality Gate status is not available."
+        fi
