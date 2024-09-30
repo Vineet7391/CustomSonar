@@ -24,7 +24,7 @@ inputs:
     required: false
     default: .
 
-  sonarHostUrl:
+  SONAR_HOST_URL:
     description: 'The SonarQube Host Url'
     required: false
     default: 'https://sonarcloud.io/'
@@ -47,15 +47,11 @@ runs:
       uses: SonarSource/sonarcloud-github-action@master  # Use a stable version instead of master
       with:
         args: ${{ inputs.args }}
-        projectBaseDir: ${{ inputs.projectBaseDir }}
-      env:
-        SONAR_HOST_URL: ${{ inputs.sonarHostUrl }}
+        projectBaseDir: ${{ inputs.projectBaseDir }}     
 
     - name: SonarQube Quality Gate check
       uses: sonarsource/sonarqube-quality-gate-action@master  # Use a stable version instead of master
-      id: sonarqube-quality-gate-check
-      env:
-        SONAR_HOST_URL: ${{ inputs.sonarHostUrl }}
+      id: sonarqube-quality-gate-check     
 
     - name: SonarQube Quality Gate Comment
       id: sonarqube-quality-gate-comment
