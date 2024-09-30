@@ -1,0 +1,9 @@
+name: 'My JavaScript Action'
+description: 'A simple GitHub Action written in JavaScript'
+inputs:
+  my-input:
+    description: 'An input for the action'
+    required: true
+runs:
+  using: 'node12'
+  main: 'index.js'
