@@ -49,7 +49,7 @@ runs:
         if [ -n "${{ inputs.scoverageReport }}" ] && [ "${{ inputs.fixPath }}" = "true" ]; then
           sed -i -e s,`pwd`,/github/workspace,g ${{ inputs.scoverageReport }}
         fi
-      echo "Final path for Scoverage report: ${{ inputs.scoverageReport }}"
+        echo "Final path for Scoverage report: ${{ inputs.scoverageReport }}"
 
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
