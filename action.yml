@@ -28,6 +28,10 @@ inputs:
     description: 'The SonarQube Host Url'
     required: false
     default: 'https://sonarcloud.io/'
+    
+  SONAR_TOKEN:
+    description: 'SonarCloud or SonarQube authentication token'
+    required: true
 
   fixPath:
     description: 'Fix the path in the Scoverage report'
@@ -51,14 +55,14 @@ runs:
       with:
         args: ${{ inputs.args }}
       env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Referencing the token from GitHub Secrets
+        SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}  # Referencing the token from GitHub Secrets
         SONAR_HOST_URL: ${{ inputs.sonarHostUrl }}
 
     - name: SonarQube Quality Gate check
       uses: sonarsource/sonarqube-quality-gate-action@master
       id: sonarqube-quality-gate-check
       env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Referencing the token from GitHub Secrets
+        SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}  # Referencing the token from GitHub Secrets
         SONAR_HOST_URL: ${{ inputs.sonarHostUrl }}
 
     - name: SonarQube Quality Gate Comment
