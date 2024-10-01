@@ -34,35 +34,23 @@ inputs:
     required: true
 
 runs:
-  using: composite
+  using: "composite"
   steps:
-    - name: Fix directory paths with sources path
-      run: |
-        if [[ -n "${{ inputs.scoverageReport }}" ]]; then
-          sed -i -e "s,`pwd`,/github/workspace,g" ${{ inputs.scoverageReport }};
-        fi
-      shell: bash
-
-    - name: SonarQube Scan
-      uses: SonarSource/sonarcloud-github-action@master
-      with:
-        args: ${{ inputs.args }}
-        projectBaseDir: ${{ inputs.projectBaseDir }}     
-
-    - name: SonarQube Quality Gate check
-      uses: sonarsource/sonarqube-quality-gate-action@master
-      id: sonarqube-quality-gate-check     
-
-    - name: SonarQube Quality Gate Comment
-      id: sonarqube-quality-gate-comment
-      shell: bash
-      run: echo "Future Feature!"
-
-    - name: "Show SonarQube Quality Gate Status"
+    - name: Install SonarQube Scanner
       shell: bash
       run: |
-        if [ -n "${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}" ]; then
-          echo "The Quality Gate status is ${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}"
-        else
-          echo "Quality Gate status is not available."
-        fi
+        wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
+        unzip sonar-scanner-cli-4.6.2.2472-linux.zip
+        mv sonar-scanner-4.6.2.2472-linux sonar-scanner
+        echo "PATH=$(pwd)/sonar-scanner/bin:$PATH" >> $GITHUB_ENV
+
+    - name: Run SonarQube Scanner
+      shell: bash
+      run: |
+        sonar-scanner \
+        -Dsonar.token="${{ inputs.SONAR_TOKEN }}" \
+        -Dsonar.host.url="${{ inputs.SONAR_HOST_URL }}" \
+        -Dsonar.projectBaseDir="${{ inputs.projectBaseDir }}" \
+        -Dsonar.qualitygate.wait=true \
+        -Dsonar.qualitygate.timeout=300 \
+        ${{ inputs.args }}
