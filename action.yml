@@ -39,9 +39,9 @@ runs:
     - name: Install SonarQube Scanner
       shell: bash
       run: |
-        wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-        unzip sonar-scanner-cli-4.6.2.2472-linux.zip
-        mv sonar-scanner-4.6.2.2472-linux sonar-scanner
+        wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.0.2.768.zip
+        unzip sonar-scanner-cli-3.0.2.768.zip
+        mv sonar-scanner-3.0.2.768 sonar-scanner
         echo "PATH=$(pwd)/sonar-scanner/bin:$PATH" >> $GITHUB_ENV
 
     - name: Run SonarQube Scanner
