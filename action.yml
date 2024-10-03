@@ -59,3 +59,9 @@ runs:
         -Dsonar.qualitygate.timeout=300 \
         ${{ inputs.args }}
 
+    - name: Add PR Comment
+      shell: bash
+      run: |
+        node /path/to/your/index.js # Update with the actual path to your index.js file
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
