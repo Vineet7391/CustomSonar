@@ -13,7 +13,7 @@ jobs:
       - name: Mock environment setup
         run: |
           echo "Setting up mock environment..."
-          echo "SONAR_HOST_URL=https://mock-sonar-url.com" >> $GITHUB_ENV
+          echo "SONAR_HOST_URL=https://sonarcloud.io/" >> $GITHUB_ENV
           echo "SONAR_TOKEN=mock_token_123" >> $GITHUB_ENV
 
       - name: Mock coverage report generation
