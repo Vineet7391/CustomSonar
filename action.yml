@@ -38,7 +38,8 @@ inputs:
     required: true
 
 runs:
-  using: "composite"
+  using: node16
+  main: 'index.js'
   steps:
     - name: Install SonarQube Scanner
       shell: bash
@@ -58,13 +59,3 @@ runs:
         -Dsonar.qualitygate.wait=true \
         -Dsonar.qualitygate.timeout=300 \
         ${{ inputs.args }}
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '16'
-
-    - name: Add PR Comment
-      shell: bash
-      run: |
-       node index.js      
