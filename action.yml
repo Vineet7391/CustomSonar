@@ -62,6 +62,4 @@ runs:
     - name: Add PR Comment
       shell: bash
       run: |
-        index.js
-      env:
-        GITHUB_TOKEN: ${{ inputs.GIT_TOKEN }}
+        index.js      
