@@ -1,0 +1,28 @@
+name: Test CustomSonar Action (Mock)
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test-custom-sonar-action:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Mock environment setup
+        run: |
+          echo "Setting up mock environment..."
+          echo "SONAR_HOST_URL=https://mock-sonar-url.com" >> $GITHUB_ENV
+          echo "SONAR_TOKEN=mock_token_123" >> $GITHUB_ENV
+
+      - name: Mock coverage report generation
+        run: |
+          echo "Generating mock coverage report..."
+          echo "coverage: 85%" > coverage-report.txt
+
+      - name: Run CustomSonar Action
+        uses: Vineet7391/CustomSonar@main
+        with:
+          sonar_host_url: ${{ env.SONAR_HOST_URL }}
+          sonar_token: ${{ env.SONAR_TOKEN }}

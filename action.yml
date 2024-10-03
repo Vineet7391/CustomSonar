@@ -38,8 +38,7 @@ inputs:
     required: true
 
 runs:
-  using: node16
-  main: 'index.js'
+  using: composite
   steps:
     - name: Install SonarQube Scanner
       shell: bash
