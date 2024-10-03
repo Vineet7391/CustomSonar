@@ -33,7 +33,7 @@ inputs:
     description: 'SonarQube authentication token'
     required: true
 
-  GITHUB_TOKEN:
+  GIT_TOKEN:
     description: 'GitHub token for PR comments'
     required: true
 
@@ -64,4 +64,4 @@ runs:
       run: |
         index.js
       env:
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.GIT_TOKEN }}
