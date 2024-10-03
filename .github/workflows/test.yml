@@ -26,3 +26,4 @@ jobs:
         with:
           sonar_host_url: ${{ env.SONAR_HOST_URL }}
           sonar_token: ${{ env.SONAR_TOKEN }}
+          sonar_projectKey: "CustomSonarMockupKey"
